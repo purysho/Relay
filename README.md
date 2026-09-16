@@ -1,28 +1,41 @@
-# Relay
+<div align="center">
+  <img src="assets/icon.svg" width="132" alt="Relay icon">
+  <h1>Relay</h1>
+  <p><strong>A local-first HTTP client, request inspector, history browser, cURL exporter, and lightweight mock server.</strong></p>
+  <p>
+    <a href="https://github.com/purysho/Relay/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/purysho/Relay/actions/workflows/ci.yml/badge.svg"></a>
+    <a href="https://github.com/purysho/Relay/releases"><img alt="Releases" src="https://img.shields.io/github/v/release/purysho/Relay?display_name=tag&sort=semver"></a>
+    <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-202832.svg"></a>
+  </p>
+  <p><a href="https://github.com/purysho/Relay/releases"><strong>Download for Windows</strong></a> · <a href="#run-from-source">Run from source</a> · <a href="https://github.com/purysho/Relay/issues">Report an issue</a></p>
+</div>
 
-**Relay is a local-first HTTP client, request inspector, history browser, cURL exporter, and lightweight mock server.**
+![Relay desktop interface preview](docs/interface-preview.svg)
 
-It is designed for developers who want a focused desktop tool for talking to APIs without accounts, hosted workspaces, or cloud sync.
+## What it does
 
-## Highlights
-
-- GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS requests
-- Query-parameter, header, and body editors
-- Pretty-printed JSON responses with timing and response headers
+- GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
+- Query parameters, headers, and request bodies
+- Formatted response body, headers, status, and timing
 - Local request history and saved requests
-- Copy/export requests as cURL commands
-- Built-in local mock HTTP endpoint for quick frontend/integration testing
-- No account, telemetry, or cloud backend
+- cURL export
+- Built-in localhost mock endpoint
+
+## Download
+
+Tagged releases are built on `windows-latest` by GitHub Actions. Each release contains `Relay.exe` and `Relay.exe.sha256`. The executable is produced from the source at that tag with PyInstaller.
+
+> Until the first tagged release is published, the latest Windows build is available as the **Relay-windows** artifact on successful CI runs.
 
 ## Run from source
 
-Requirements: Python 3.10+.
+Requirements: Python 3.10+ with Tk support.
 
 ```powershell
 pyw relay_desktop.pyw
 ```
 
-Relay uses only the Python standard library at runtime.
+The application uses Python's standard library at runtime.
 
 ## Build a standalone Windows executable
 
@@ -30,15 +43,25 @@ Relay uses only the Python standard library at runtime.
 powershell -ExecutionPolicy Bypass -File .\build-windows.ps1
 ```
 
-The build helper installs PyInstaller into the active Python environment and creates `dist\Relay.exe`.
+Output:
+
+```text
+dist\Relay.exe
+```
 
 ## Privacy
 
-Request history and saved requests are stored locally in `~/.relay/`. Relay sends traffic only to endpoints the user explicitly requests. The mock server binds to `127.0.0.1` by default.
+History and saved requests stay in ~/.relay/. Relay only sends traffic to endpoints the user explicitly requests; its mock server binds to 127.0.0.1 by default.
 
 ## Scope
 
-Relay V1 is intentionally smaller than Postman/Insomnia. It focuses on fast manual HTTP work, response inspection, repeatability, and local mocking rather than team collaboration or hosted API workspaces.
+Relay intentionally focuses on fast manual HTTP work and local mocking rather than hosted team workspaces or cloud collaboration.
+
+## Release process
+
+- Every push runs tests/compile checks and builds a Windows executable artifact.
+- Tags matching `v*` build the executable again, compute SHA256, and publish both files to GitHub Releases.
+- See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License
 

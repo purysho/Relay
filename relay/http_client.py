@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shlex
 import time
 import urllib.error
@@ -21,9 +22,12 @@ def parse_key_value_lines(text: str) -> dict[str, str]:
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
-        if ":" in line:
+        # Split on whichever separator comes first, so a param such as
+        # "redirect=https://x" or "time=10:30" keeps the colon in its value.
+        colon, equals = line.find(":"), line.find("=")
+        if colon >= 0 and (equals < 0 or colon < equals):
             key, value = line.split(":", 1)
-        elif "=" in line:
+        elif equals >= 0:
             key, value = line.split("=", 1)
         else:
             raise RelayError(f"Expected 'key: value' or 'key=value': {raw}")
@@ -38,7 +42,9 @@ def build_url(url: str, params: dict[str, str]) -> str:
     url = url.strip()
     if not url:
         raise RelayError("Enter a URL first.")
-    if not urllib.parse.urlparse(url).scheme:
+    # urlparse reads "localhost:8080/x" as scheme "localhost", so only an
+    # explicit "scheme://" counts as already having one.
+    if not re.match(r"^[A-Za-z][A-Za-z0-9+.-]*://", url):
         url = "http://" + url
     if not params:
         return url

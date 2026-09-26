@@ -2,6 +2,15 @@
 
 All notable changes to Relay are documented here.
 
+## [1.1.1] - 2026-09-26
+
+### Fixed
+- A param whose value contains a colon, such as `redirect=https://example.com` or `time=10:30`, was split at the colon; lines now split on whichever of `:` or `=` comes first.
+- A URL typed as `localhost:8080/path` was sent without `http://` and failed; any address without an explicit `scheme://` now gets one.
+
+### Added
+- Behavioural tests covering the areas above and the rest of the core.
+
 ## [1.1.0] - 2026-09-26
 
 ### Added
